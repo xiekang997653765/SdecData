@@ -32,7 +32,7 @@ public enum QueryData {
      * 为了保证数据库的安全，查询数据的时候，必须设置时间范围(开始时间和结束时间)
      * 如果一次查询的数据量太大，可能会导致数据库服务器宕机
      */
-    private static void checkParameter (QueryParameter parameter) {
+    private void checkParameter (QueryParameter parameter) {
         if (parameter.getBeginDate() == null) {
             throw new IllegalArgumentException("Please set parameter: beginDate");
         }

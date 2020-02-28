@@ -10,8 +10,6 @@ import cn.fudan.lib.stream.utils.DataTypeConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class TestApp {
@@ -71,8 +69,6 @@ public class TestApp {
 
         List<DataItem> queryResult = QueryData.INSTANCE.query(parameter);
         System.out.println("查询出" + queryResult.size() + "条数据");
-
-
     }
 
 }
