@@ -104,7 +104,7 @@ public class ReadData extends TimerTask {
         QueryParameter parameter = new QueryParameter();
         List<Long> dataPoolDataIds = getDataPoolDataIds();
         if (dataPoolDataIds.size() <= 0) dataPoolDataIds.add(0L);
-        parameter.setIds(dataPoolDataIds);
+        parameter.setExcludeIds(dataPoolDataIds);
         parameter.setBeginDate(beginDate.toDate());
         parameter.setEndDate(beginDate.plusSeconds(60*60).toDate()); //10s之后的数据
         parameter.setTableName(this.dataType.getDataType());
@@ -137,16 +137,16 @@ public class ReadData extends TimerTask {
                 needRemoveLit.clear();
                 for (final DataItem dataItem : DataPool) {
                     if (dataItem.getUpTimestamp().getTime() <= now) {
-                        try {
-                            executorService.execute(new Runnable() {
-                                @Override
-                                public void run () {
+                        executorService.execute(new Runnable() {
+                            @Override
+                            public void run () {
+                                try {
                                     handler.handle(dataItem, dataType.getDataType());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            }
+                        });
 
                         needRemoveLit.add(dataItem);
 
@@ -156,7 +156,7 @@ public class ReadData extends TimerTask {
                     }
                 }
 
-                DataPool.remove(needRemoveLit);
+                DataPool.removeAll(needRemoveLit);
             }
             if (isLimit && hadReadItemsCount >= maxDataSize) {
                 break;

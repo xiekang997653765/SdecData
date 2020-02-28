@@ -32,7 +32,6 @@ public class StreamDataSubscribe {
         }
     }
 
-
     private void checkDataTypes (SubscribeItem[] dataTypes) {
         if (dataTypes.length <= 0) {
             throw new IllegalArgumentException("Enter at least one data type parameter");
@@ -50,6 +49,5 @@ public class StreamDataSubscribe {
         }
 
     }
-
 
 }

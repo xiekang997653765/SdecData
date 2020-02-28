@@ -3,23 +3,29 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.fudan.lib.stream.database.DaoMapper">
-    <select id="readData" resultType="cn.fudan.lib.dto.DataItem" parameterType="cn.fudan.lib.stream.database.QueryParameter">
-      select
-      `id`,
-      `deviceId`,
-      `provider`,
-      `up_timestamp` AS upTimestamp,
-      `data`,
-      `h`,
-      `d`,
-      `m`,
-      `y`
-      FROM ${param.tableName}
-      WHERE  up_timestamp BETWEEN  #{param.beginDate} AND #{param.endDate}
-      AND  id NOT  IN
-      <foreach collection="param.ids" item="item" open="(" close=")" separator=",">
-          #{item}
-      </foreach>
-   </select>
+    <select id="readData" resultType="cn.fudan.lib.dto.DataItem"
+            parameterType="cn.fudan.lib.stream.database.QueryParameter">
+        select
+        `id`,
+        `deviceId`,
+        `provider`,
+        `up_timestamp` AS upTimestamp,
+        `data`,
+        `h`,
+        `d`,
+        `m`,
+        `y`
+        FROM ${param.tableName}
+        WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
+        <if test="param.excludeIds != null">
+            AND id NOT IN
+            <foreach collection="param.excludeIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="param.deviceId != null">
+            AND deviceId = #{param.deviceId}
+        </if>
+    </select>
 
 </mapper>

@@ -6,8 +6,9 @@ import java.util.List;
 public class QueryParameter {
     private String     tableName;
     private Date       beginDate;
-    private Date        endDate;
-    private List<Long> ids;
+    private Date       endDate;
+    private List<Long> excludeIds;
+    private String     deviceId;
 
     public String getTableName () {
         return tableName;
@@ -33,12 +34,20 @@ public class QueryParameter {
         this.endDate = endDate;
     }
 
-    public List<Long> getIds () {
-        return ids;
+    public List<Long> getExcludeIds () {
+        return excludeIds;
     }
 
-    public void setIds (List<Long> ids) {
-        this.ids = ids;
+    public void setExcludeIds (List<Long> excludeIds) {
+        this.excludeIds = excludeIds;
+    }
+
+    public String getDeviceId () {
+        return deviceId;
+    }
+
+    public void setDeviceId (String deviceId) {
+        this.deviceId = deviceId;
     }
 
 }
