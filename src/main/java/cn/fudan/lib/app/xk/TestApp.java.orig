@@ -24,12 +24,17 @@ public class TestApp {
          *   aa:bb:cc 表示你系统当前的 小时:分钟:秒
          **/
         SubscribeItem bedMatSub = new SubscribeItem();
+<<<<<<< HEAD
+        bedMatSub.setDataType(DataTypeConstants.WellCoverSensor);
+        bedMatSub.setStartDate("2018-07-20"); //从5月14号的当前时刻开始
+=======
         bedMatSub.setDataType(DataTypeConstants.BedMat);
         bedMatSub.setStartDate("2018-06-15"); //从5月14号的当前时刻开始
+>>>>>>> fork/master
 
-        SubscribeItem trashBinSub = new SubscribeItem();
-        trashBinSub.setDataType(DataTypeConstants.TrashBin);
-        trashBinSub.setStartDate("2018-05-16");//从5月16号的当前时刻开始
+//        SubscribeItem trashBinSub = new SubscribeItem();
+//        trashBinSub.setDataType(DataTypeConstants.TrashBin);
+//        trashBinSub.setStartDate("2018-05-16");//从5月16号的当前时刻开始
 
         /**
          * 数据处理器
@@ -49,6 +54,9 @@ public class TestApp {
          *
          * 最后调用 start 方法，开始运行应用
          * */
+<<<<<<< HEAD
+        new StreamDataSubscribe(handler,  bedMatSub).start();
+=======
         new StreamDataSubscribe(handler, bedMatSub).start();
 
         /**
@@ -69,6 +77,7 @@ public class TestApp {
 
         List<DataItem> queryResult = QueryData.INSTANCE.query(parameter);
         System.out.println("查询出" + queryResult.size() + "条数据");
+>>>>>>> fork/master
     }
 
 }
