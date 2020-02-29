@@ -27,5 +27,12 @@
             AND deviceId = #{param.deviceId}
         </if>
     </select>
+    <select id="queryAllDeviceId" resultType="String"
+            parameterType="cn.fudan.lib.stream.database.QueryParameter">
+        select
+        distinct `deviceId`
+        FROM ${param.tableName}
+        WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
+    </select>
 
 </mapper>

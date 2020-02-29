@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface DaoMapper {
     List<DataItem> readData (@Param ("param") QueryParameter parameter);
+    List<String> queryAllDeviceId (@Param ("param") QueryParameter parameter);
 
 }

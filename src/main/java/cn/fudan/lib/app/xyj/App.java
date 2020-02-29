@@ -27,9 +27,9 @@ public class App {
          *   比如设置2018-05-14， 就表示从2018-05-14 aa:bb:cc开始读
          *   aa:bb:cc 表示你系统当前的 小时:分钟:秒
          **/
-        SubscribeItem bedMatSub = new SubscribeItem();
-        bedMatSub.setDataType(DataTypeConstants.BedMat);
-        bedMatSub.setStartDate("2018-06-15"); //从5月14号的当前时刻开始
+        SubscribeItem medicalExaminSystemSub = new SubscribeItem();
+        medicalExaminSystemSub.setDataType(DataTypeConstants.MedicalExaminSystem);
+        medicalExaminSystemSub.setStartDate("2018-06-15"); //从5月14号的当前时刻开始
 
         SubscribeItem trashBinSub = new SubscribeItem();
         trashBinSub.setDataType(DataTypeConstants.TrashBin);
@@ -42,7 +42,7 @@ public class App {
          *
          * 细节请看 TestHandler
          * */
-        DataHandler handler = new TestHandler();
+        DataHandler handler = new MedicalExaminSystemHandler();
 
         /**
          * 订阅一个流数据，
@@ -53,7 +53,7 @@ public class App {
          *
          * 最后调用 start 方法，开始运行应用
          * */
-//        new StreamDataSubscribe(handler, bedMatSub).start();
+//        new StreamDataSubscribe(handler, medicalExaminSystemSub).start();
 
         /**
          * 历史数据查询
@@ -67,68 +67,71 @@ public class App {
         /****** 必填条件结束 ********/
 
         /****** 选填条件开始 ********/
-        //parameter.setDeviceId("deviceId");  //根据设备ID查找
+//        parameter.setDeviceId("deviceId");  //根据设备ID查找
         //parameter.setExcludeIds(new ArrayList<Long>()); //需要排除的数据ID集合
         /****** 选填条件结束 ********/
 
         List<DataItem> queryResult = QueryData.INSTANCE.query(parameter);
         System.out.println("查询出" + queryResult.size() + "条数据");
 
-        ArrayList<String> projName = new ArrayList<String>();
-        String[] proj = {"hwBmi", "heightPressure", "lowPressure", "pulse", "oxygenSaturation",
-                "templature", "fatRate", "waterRate", "basalMetabolism", "pulseRate"};
-        Collections.addAll(projName, proj);
-        for (int i = 0; i < 1; i++) {
-            DataItem in = queryResult.get(i);
-            String data = in.getData().toString();
-            JSONArray jsonArray = JSONArray.parseArray(data);
-            Map<String, String> map = new HashMap<>();
-            Map<String, Float> wrongData = new HashMap<>();
-            JSONObject returnInfo = new JSONObject();
-            String wrongInfo;
-            int wrongNum = 0;
-            for (int j = 0; j < jsonArray.size(); j++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(j);
-                String name = jsonObject.getString("name");
-                String values = jsonObject.getString("values");
-                map.put(name, values);
-            }
-            for (String s : projName) {
-                String sState = s + "State";
-                if (map.get(s) == null || map.get(sState) == null) {
-                    continue;
-                }
-
-                String temps = map.get(s);
-                String tempState = map.get(sState);
-                float tempv = Float.parseFloat((temps.substring(2, temps.length() - 2)));
-                float tempStatev = Float.parseFloat(tempState.substring(2, tempState.length() - 2));
-
-                if (temps == null || tempStatev == 0) {
-                    continue;
-                }
-                if (tempStatev != 3) {
-                    wrongNum++;
-                    wrongData.put(s, tempv);
-                    wrongData.put(sState, tempStatev);
-                }
-            }
-            if (wrongNum < 3) {
-                wrongInfo = "普通";
-            } else if (wrongNum < 7) {
-                wrongInfo = "警告";
-            } else {
-                wrongInfo = "严重";
-            }
-            String wrongDataJson = JSON.toJSONString(wrongData);
-            returnInfo.put("device_code", in.getDeviceCode());
-            returnInfo.put("device_id", in.getDeviceId());
-            returnInfo.put("exception_date_time", String.valueOf(in.getUpTimestamp()));
-            returnInfo.put("exception_data", wrongDataJson);
-            returnInfo.put("alarm_level", wrongInfo);
-            System.out.println(returnInfo);
-
-
+        List<String> queryId = QueryData.INSTANCE.getAllDeviceId(parameter);
+        System.out.println("查询出" + queryId.size() + "条数据");
+        for(String i:queryId){
+            System.out.println(i);
         }
+
+
+//        String[] projName = {"hwBmi", "heightPressure", "lowPressure", "pulse", "oxygenSaturation",
+//                "templature", "fatRate", "waterRate", "basalMetabolism", "pulseRate"};
+//        for (int i = 0; i < 1; i++) {
+//            DataItem in = queryResult.get(i);
+//            String data = in.getData();
+//            List<DataContent> jsonArray;
+//            jsonArray = JSONObject.parseArray(data, DataContent.class);
+//            Map<String, List<String>> map = new HashMap<>();
+//            Map<String, Float> wrongData = new HashMap<>();
+//            JSONObject returnInfo = new JSONObject();
+//            String wrongInfo;
+//            int wrongNum = 0;
+//            for (DataContent jsonObject : jsonArray) {
+//                String name = jsonObject.getName();
+//                List<String> values = jsonObject.getValues();
+//                map.put(name, values);
+//            }
+//            for (String s : projName) {
+//                String sState = s + "State";
+//                if (map.get(s) == null || map.get(sState) == null) {
+//                    continue;
+//                }
+//                List<String> temps = map.get(s);
+//                List<String> tempState = map.get(sState);
+//                float tempv = Float.parseFloat(temps.get(0));
+//                float tempStatev = Float.parseFloat(tempState.get(0));
+//
+//                if (temps == null || tempStatev == 0) {
+//                    continue;
+//                }
+//                if (tempStatev != 3) {
+//                    wrongNum++;
+//                    wrongData.put(s, tempv);
+//                    wrongData.put(sState, tempStatev);
+//                }
+//            }
+//            if (wrongNum < 3) {
+//                wrongInfo = "普通";
+//            } else if (wrongNum < 7) {
+//                wrongInfo = "警告";
+//            } else {
+//                wrongInfo = "严重";
+//            }
+//            String wrongDataJson = JSON.toJSONString(wrongData);
+//            returnInfo.put("device_code", in.getDeviceCode());
+//            returnInfo.put("device_id", in.getDeviceId());
+//            returnInfo.put("exception_date_time", String.valueOf(in.getUpTimestamp()));
+//            returnInfo.put("exception_data", wrongDataJson);
+//            returnInfo.put("alarm_level", wrongInfo);
+//            returnInfo.put("app_code", "xyj_1");
+//            System.out.println(returnInfo);
+//        }
     }
 }

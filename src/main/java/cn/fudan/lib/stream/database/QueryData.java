@@ -28,6 +28,22 @@ public enum QueryData {
         return dataItemList;
     }
 
+    public List<String> getAllDeviceId(QueryParameter parameter){
+        checkParameter(parameter);
+        SqlSession sqlSession = MySqlSessionFactory.createSqlSession().openSession();
+        DaoMapper mapper = sqlSession.getMapper(DaoMapper.class);
+        List<String> dataItemList = null;
+
+        try {
+            dataItemList = mapper.queryAllDeviceId(parameter);
+        } finally {
+            if (sqlSession != null)
+                sqlSession.close();
+        }
+
+        return dataItemList;
+    }
+
     /**
      * 为了保证数据库的安全，查询数据的时候，必须设置时间范围(开始时间和结束时间)
      * 如果一次查询的数据量太大，可能会导致数据库服务器宕机
