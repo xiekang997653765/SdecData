@@ -26,6 +26,8 @@ public class DataTypeConstants {
     public static final String WaterPressureSensor       = "WaterPressureSensor";//	消防栓水压传感器
     public static final String TankCoverSensor           = "TankCoverSensor";//	水箱盖传感器
     public static final String MedicalExaminSystem       = "MedicalExaminSystem";//	智能体检
+    public static final String tDeviceInfo               = "t_device_info";//	位置信息
+    public static final String tExceptionData            = "t_exception_data";//	异常信息表
 
     private static final Set<String> ALL_DATA_TYPES = new HashSet<String>() {
         {
@@ -51,6 +53,7 @@ public class DataTypeConstants {
             this.add(DataTypeConstants.WaterPressureSensor);
             this.add(DataTypeConstants.TankCoverSensor);
             this.add(DataTypeConstants.MedicalExaminSystem);
+            this.add(DataTypeConstants.tDeviceInfo);
         }
     };
 

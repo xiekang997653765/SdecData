@@ -4,28 +4,83 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.fudan.lib.stream.database.DaoMapper">
     <select id="readData" resultType="cn.fudan.lib.dto.DataItem"
+                     parameterType="cn.fudan.lib.stream.database.QueryParameter">
+    select
+    `id`,
+    `deviceId`,
+    `provider`,
+    `up_timestamp` AS upTimestamp,
+    `data`,
+    `h`,
+    `d`,
+    `m`,
+    `y`
+    FROM ${param.tableName}
+    WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
+    <if test="param.excludeIds != null">
+        AND id NOT IN
+        <foreach collection="param.excludeIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </if>
+    <if test="param.deviceId != null">
+        AND deviceId = #{param.deviceId}
+    </if>
+</select>
+
+    <select id="readDeviceInfo" resultType="cn.fudan.lib.app.xr.DeviceInfoDataItem"
             parameterType="cn.fudan.lib.stream.database.QueryParameter">
         select
         `id`,
-        `deviceId`,
-        `provider`,
-        `up_timestamp` AS upTimestamp,
-        `data`,
-        `h`,
-        `d`,
-        `m`,
-        `y`
+        `device_code` AS deviceCode,
+        `device_no` AS deviceNo,
+        `deveui` AS deveUI,
+        `location_address` AS locationAddress,
+        `lat` AS lat,
+        `lng` AS lng,
+        `device_height` AS deviceHeight,
+        `device_name` AS deviceName,
+        `province`,
+        `city`,
+        `area`,
+        `detail_address` AS detailAddress,
+        `area_20_km_other` AS area20kmOther,
+        `area_20_km` AS area20km
         FROM ${param.tableName}
-        WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
-        <if test="param.excludeIds != null">
-            AND id NOT IN
-            <foreach collection="param.excludeIds" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
-        </if>
-        <if test="param.deviceId != null">
-            AND deviceId = #{param.deviceId}
-        </if>
+        WHERE deveui = #{param.deviceId}
     </select>
+
+    <insert id="insertException"
+            parameterType="cn.fudan.lib.stream.database.InsertParameter">
+        insert
+        into ${param.tableName} (
+        `id`,
+        `device_code`,
+        `device_id`,
+        `exception_date_time`,
+        `exception_data`,
+        `alarm_level`,
+        `exception_info`,
+        `data_status`,
+        `exception_handler`,
+        `handling_time`,
+        `handling_remark`,
+        `app_code`
+        )
+        values (
+        #{param.id},
+        #{param.deviceCode},
+        #{param.deviceId},
+        #{param.exceptionDateTime},
+        #{param.exceptionData},
+        #{param.alarmLevel},
+        #{param.exceptionInfo},
+        #{param.dataStatus},
+        #{param.exceptionHandler},
+        #{param.handlingTime},
+        #{param.handlingRemark},
+        #{param.appCode}
+        )
+    </insert>
 
 </mapper>
