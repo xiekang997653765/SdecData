@@ -79,6 +79,7 @@ public class ReadData extends TimerTask {
             System.out.println("数据池时间已经超过一个小时，暂停拉取数据。");
             return;
         }
+
         if (parameter.getBeginDate().getTime() > endDate.getMillis()) return;
 
         if (parameter.getEndDate().getTime() > endDate.getMillis()) {
@@ -95,6 +96,9 @@ public class ReadData extends TimerTask {
             synchronized (lock) {
                 DataPool.addAll(dataItemList);
             }
+        } else {
+            //否则，开始时间直接指向下一次结束时间
+            this.beginDate = new DateTime(parameter.getEndDate());
         }
         dataItemList.clear();
         sqlSession.close();
@@ -106,7 +110,7 @@ public class ReadData extends TimerTask {
         if (dataPoolDataIds.size() <= 0) dataPoolDataIds.add(0L);
         parameter.setExcludeIds(dataPoolDataIds);
         parameter.setBeginDate(beginDate.toDate());
-        parameter.setEndDate(beginDate.plusSeconds(60*60).toDate()); //10s之后的数据
+        parameter.setEndDate(beginDate.plusSeconds(60*60).toDate()); //1小时之后的数据
         parameter.setTableName(this.dataType.getDataType());
 
         return parameter;
