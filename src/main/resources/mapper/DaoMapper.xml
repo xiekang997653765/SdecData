@@ -34,5 +34,13 @@
         FROM ${param.tableName}
         WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
     </select>
+    <select id="insertExceptionData" parameterType="cn.fudan.lib.app.xyj.ExceptionParameter">
+        INSERT INTO t_exception_data
+        (`device_code`,`device_id`,`exception_date_time`,`exception_data`,`alarm_level`,`app_code`)
+        VALUES
+        (#{data.deviceCode},#{data.deviceId},
+        #{data.exceptionDateTime},#{data.exceptionData},
+        #{data.alarmLevel},#{data.appCode})
+    </select>
 
 </mapper>

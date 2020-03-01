@@ -2,6 +2,8 @@ package cn.fudan.lib.app.xyj;
 
 import cn.fudan.lib.dto.DataItem;
 import cn.fudan.lib.stream.core.SimpleStreamDataHandler;
+import cn.fudan.lib.stream.database.QueryData;
+import cn.fudan.lib.stream.utils.DataTypeConstants;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -19,7 +21,7 @@ public class MedicalExaminSystemHandler extends SimpleStreamDataHandler{
         List<DataContent> jsonArray;
         jsonArray = JSONObject.parseArray(data, DataContent.class);
         Map<String, List<String>> map = new HashMap<>();
-        Map<String, Float> wrongData = new HashMap<>();
+        JSONObject wrongData = new JSONObject();
         JSONObject returnInfo = new JSONObject();
         String wrongInfo;
         int wrongNum = 0;
@@ -55,13 +57,24 @@ public class MedicalExaminSystemHandler extends SimpleStreamDataHandler{
         } else {
             wrongInfo = "严重";
         }
-        String wrongDataJson = JSON.toJSONString(wrongData);
-        returnInfo.put("device_code", in.getDeviceCode());
-        returnInfo.put("device_id", in.getDeviceId());
-        returnInfo.put("exception_date_time", String.valueOf(in.getUpTimestamp()));
-        returnInfo.put("exception_data", wrongDataJson);
-        returnInfo.put("alarm_level", wrongInfo);
-        returnInfo.put("app_code", "xyj_1");
-        System.out.println(returnInfo);
+//        String wrongDataJson = JSON.toJSONString(wrongData);
+
+        ExceptionParameter returnParameter = new ExceptionParameter();
+        returnParameter.setDeviceCode(DataTypeConstants.MedicalExaminSystem);
+        returnParameter.setDeviceId(in.getId());
+        returnParameter.setExceptionDateTime(in.getUpTimestamp());
+        returnParameter.setExceptionData(wrongData);
+        returnParameter.setAlarmLevel(wrongInfo);
+        returnParameter.setAppCode("xyj_1");
+
+        QueryData.INSTANCE.postExceptionData(returnParameter);
+
+//        returnInfo.put("device_code", DataTypeConstants.MedicalExaminSystem);
+//        returnInfo.put("device_id", in.getDeviceId());
+//        returnInfo.put("exception_date_time", String.valueOf(in.getUpTimestamp()));
+//        returnInfo.put("exception_data", wrongData);
+//        returnInfo.put("alarm_level", wrongInfo);
+//        returnInfo.put("app_code", "xyj_1");
+//        System.out.println(returnInfo);
     }
 }

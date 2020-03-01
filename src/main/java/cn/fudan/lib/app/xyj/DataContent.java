@@ -1,7 +1,11 @@
 package cn.fudan.lib.app.xyj;
 
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataContent {
 
@@ -28,5 +32,17 @@ public class DataContent {
 
     public void setValues(List<String> values) {
         this.values = values;
+    }
+
+    public static Map<String, List<String>> getDataContentList(String data){
+        List<DataContent> jsonArray;
+        Map<String, List<String>> map = new HashMap<>();
+        jsonArray = JSONObject.parseArray(data,DataContent.class);
+        for (DataContent jsonObject : jsonArray){
+            String name = jsonObject.getName();
+            List<String> values= jsonObject.getValues();
+            map.put(name,values);
+        }
+        return map;
     }
 }

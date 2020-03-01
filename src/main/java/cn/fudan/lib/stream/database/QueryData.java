@@ -1,5 +1,6 @@
 package cn.fudan.lib.stream.database;
 
+import cn.fudan.lib.app.xyj.ExceptionParameter;
 import cn.fudan.lib.dao.MySqlSessionFactory;
 import cn.fudan.lib.dto.DataItem;
 import org.apache.ibatis.session.SqlSession;
@@ -42,6 +43,19 @@ public enum QueryData {
         }
 
         return dataItemList;
+    }
+    public void postExceptionData(ExceptionParameter parameter){
+        SqlSession sqlSession = MySqlSessionFactory.createSqlSession().openSession();
+        DaoMapper mapper = sqlSession.getMapper(DaoMapper.class);
+        List<String> dataItemList = null;
+
+        try {
+            mapper.insertExceptionData(parameter);
+        } finally {
+            if (sqlSession != null)
+                sqlSession.close();
+        }
+
     }
 
     /**
