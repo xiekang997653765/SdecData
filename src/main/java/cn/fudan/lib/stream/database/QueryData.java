@@ -4,6 +4,7 @@ import cn.fudan.lib.app.xyj.ExceptionParameter;
 import cn.fudan.lib.dao.MySqlSessionFactory;
 import cn.fudan.lib.dto.DataItem;
 import org.apache.ibatis.session.SqlSession;
+import cn.fudan.lib.app.xr.DeviceInfoDataItem;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ public enum QueryData {
 
         return dataItemList;
     }
+  
     public void postExceptionData(ExceptionParameter parameter){
         SqlSession sqlSession = MySqlSessionFactory.createSqlSession().openSession();
         DaoMapper mapper = sqlSession.getMapper(DaoMapper.class);
@@ -51,11 +53,25 @@ public enum QueryData {
 
         try {
             mapper.insertExceptionData(parameter);
+          } finally {
+            if (sqlSession != null)
+                sqlSession.close();
+        }
+    }
+  
+    public List<DeviceInfoDataItem> queryDeviceInfo (QueryParameter parameter) {
+//        checkParameter(parameter);
+        SqlSession sqlSession = MySqlSessionFactory.createSqlSession().openSession();
+        DaoMapper mapper = sqlSession.getMapper(DaoMapper.class);
+        List<DeviceInfoDataItem> deviceInfoDataItem = null;
+
+        try {
+            deviceInfoDataItem = mapper.readDeviceInfo(parameter);
         } finally {
             if (sqlSession != null)
                 sqlSession.close();
         }
-
+        return deviceInfoDataItem;
     }
 
     /**
@@ -75,4 +91,5 @@ public enum QueryData {
             parameter.setExcludeIds(null);
         }
     }
+
 }

@@ -4,28 +4,220 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.fudan.lib.stream.database.DaoMapper">
     <select id="readData" resultType="cn.fudan.lib.dto.DataItem"
+                     parameterType="cn.fudan.lib.stream.database.QueryParameter">
+    select
+    `id`,
+    `deviceId`,
+    `provider`,
+    `up_timestamp` AS upTimestamp,
+    `data`,
+    `h`,
+    `d`,
+    `m`,
+    `y`
+    FROM ${param.tableName}
+    WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
+    <if test="param.excludeIds != null">
+        AND id NOT IN
+        <foreach collection="param.excludeIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </if>
+    <if test="param.deviceId != null">
+        AND deviceId = #{param.deviceId}
+    </if>
+</select>
+
+    <select id="readDeviceInfo" resultType="cn.fudan.lib.app.xr.DeviceInfoDataItem"
             parameterType="cn.fudan.lib.stream.database.QueryParameter">
         select
         `id`,
-        `deviceId`,
-        `provider`,
-        `up_timestamp` AS upTimestamp,
-        `data`,
-        `h`,
-        `d`,
-        `m`,
-        `y`
+        `device_code` AS deviceCode,
+        `device_no` AS deviceNo,
+        `deveui` AS deveUI,
+        `location_address` AS locationAddress,
+        `lat` AS lat,
+        `lng` AS lng,
+        `device_height` AS deviceHeight,
+        `device_name` AS deviceName,
+        `province`,
+        `city`,
+        `area`,
+        `detail_address` AS detailAddress,
+        `area_20_km_other` AS area20kmOther,
+        `area_20_km` AS area20km
         FROM ${param.tableName}
-        WHERE up_timestamp BETWEEN #{param.beginDate} AND #{param.endDate}
-        <if test="param.excludeIds != null">
-            AND id NOT IN
-            <foreach collection="param.excludeIds" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
+        WHERE deveui = #{param.deviceId}
+    </select>
+
+    <insert id="insertException"
+            parameterType="cn.fudan.lib.stream.database.InsertParameter">
+        insert
+        into ${param.tableName} (
+        `id`,
+        `device_code`,
+        `device_id`,
+        `exception_date_time`,
+        `exception_data`,
+        `alarm_level`,
+        `exception_info`,
+        `data_status`,
+        `exception_handler`,
+        `handling_time`,
+        `handling_remark`,
+        `app_code`
+        )
+        values (
+        #{param.id},
+        #{param.deviceCode},
+        #{param.deviceId},
+        #{param.exceptionDateTime},
+        #{param.exceptionData},
+        #{param.alarmLevel},
+        #{param.exceptionInfo},
+        #{param.dataStatus},
+        #{param.exceptionHandler},
+        #{param.handlingTime},
+        #{param.handlingRemark},
+        #{param.appCode}
+        )
+    </insert>
+    <select id="getDeviceInfoById" resultType="cn.fudan.lib.dto.DeviceInfo" parameterType="java.lang.Long">
+        SELECT
+          `id`,
+          `device_code` AS deviceCode,
+          `device_no` AS deviceNo,
+          `deveui`,
+          `location_address` AS locationAddress,
+          `lat`,
+          `lng`,
+          `device_height` AS deviceHeight,
+          `device_name` AS deviceName,
+          `province`,
+          `city`,
+          `area`,
+          `detail_address` AS detailAddress,
+          `area_20_km_other` AS area20KmOther,
+          `area_20_km` AS area20Km
+           FROM t_device_info
+           WHERE id = #{id}
+    </select>
+
+    <select id="getDeviceInfoByDeviceNo" resultType="cn.fudan.lib.dto.DeviceInfo" parameterType="java.lang.String">
+        SELECT
+          `id`,
+          `device_code` AS deviceCode,
+          `device_no` AS deviceNo,
+          `deveui`,
+          `location_address` AS locationAddress,
+          `lat`,
+          `lng`,
+          `device_height` AS deviceHeight,
+          `device_name` AS deviceName,
+          `province`,
+          `city`,
+          `area`,
+          `detail_address` AS detailAddress,
+          `area_20_km_other` AS area20KmOther,
+          `area_20_km` AS area20Km
+           FROM t_device_info
+           WHERE device_no = #{deviceNo}
+    </select>
+
+    <select id="getDeviceInfoByDeviceUi" resultType="cn.fudan.lib.dto.DeviceInfo" parameterType="java.lang.String">
+        SELECT
+          `id`,
+          `device_code` AS deviceCode,
+          `device_no` AS deviceNo,
+          `deveui`,
+          `location_address` AS locationAddress,
+          `lat`,
+          `lng`,
+          `device_height` AS deviceHeight,
+          `device_name` AS deviceName,
+          `province`,
+          `city`,
+          `area`,
+          `detail_address` AS detailAddress,
+          `area_20_km_other` AS area20KmOther,
+          `area_20_km` AS area20Km
+           FROM t_device_info
+           WHERE deveui = #{deviceUi}
+    </select>
+
+    <select id="getDeviceInfo" resultType="cn.fudan.lib.dto.DeviceInfo"
+            parameterType="cn.fudan.lib.dto.DeviceInfoQueryParameter">
+        SELECT
+        `id`,
+        `device_code` AS deviceCode,
+        `device_no` AS deviceNo,
+        `deveui`,
+        `location_address` AS locationAddress,
+        `lat`,
+        `lng`,
+        `device_height` AS deviceHeight,
+        `device_name` AS deviceName,
+        `province`,
+        `city`,
+        `area`,
+        `detail_address` AS detailAddress,
+        `area_20_km_other` AS area20KmOther,
+        `area_20_km` AS area20Km
+        FROM t_device_info
+        WHERE 1=1
+        <if test="param.id != null">
+            AND id = #{param.id}
         </if>
-        <if test="param.deviceId != null">
-            AND deviceId = #{param.deviceId}
+        <if test="param.deviceCode != null">
+            AND device_code = #{param.deviceCode}
         </if>
+        <if test="param.deviceNo != null">
+            AND device_no = #{param.deviceNo}
+        </if>
+        <if test="param.deveui != null">
+            AND deveui = #{param.deveui}
+        </if>
+        <if test="param.province != null">
+            AND province = #{param.province}
+        </if>
+        <if test="param.city != null">
+            AND city = #{param.city}
+        </if>
+        <if test="param.area != null">
+            AND area = #{param.area}
+        </if>
+    </select>
+
+    <update id="updateLocationInfoById" parameterType="cn.fudan.lib.dto.DeviceInfo">
+      UPDATE t_device_info SET
+      province = #{item.province},
+      city = #{item.city},
+      area = #{item.area},
+      detail_address = #{item.detailAddress}
+      WHERE id = #{item.id}
+    </update>
+
+    <update id="update20KmDevicesById" parameterType="cn.fudan.lib.dto.DeviceInfo">
+      UPDATE t_device_info SET
+      area_20_km_other = #{info.area20KmOther},
+      area_20_km = #{info.area20Km}
+      WHERE id = #{info.id}
+    </update>
+
+    <select id="get20KmDevices" resultType="cn.fudan.lib.dto.DeviceInfo">
+        select  id,
+        `device_code` AS deviceCode,
+        `device_no` AS deviceNo,
+        `deveui`,
+        ROUND(6378.138 * 2 * ASIN(SQRT(POW(SIN((#{lat} * PI() / 180 - lat * PI() / 180) / 2),2) + COS(#{lat} * PI() / 180) * COS(lat * PI() / 180) * POW(SIN((#{lng} * PI() / 180 -   lng * PI() / 180) / 2),2))) * 1000) AS distance
+        from t_device_info where
+        lat &gt; (#{lat} - 2) and
+        lat &lt; (#{lat} + 2) and
+        lng &gt; (#{lng}-2) and
+        lng &lt; (#{lng}+2)
+        having distance &lt;= 20000
+        AND distance &gt; 0
+        order by distance asc;
     </select>
     <select id="queryAllDeviceId" resultType="String"
             parameterType="cn.fudan.lib.stream.database.QueryParameter">

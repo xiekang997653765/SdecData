@@ -20,7 +20,7 @@
             <!-- 数据源，池类型的数据源 -->
             <dataSource type="cn.fudan.lib.dao.DruidDataSourceFactory">
                 <property name="driverClass" value="com.mysql.jdbc.Driver"/>
-                <property name="jdbcUrl" value="jdbc:mysql://10.190.80.68:3306/lib_data"/>
+                <property name="jdbcUrl" value="jdbc:mysql://10.190.80.68:3306/lib_data?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="fd123456"/>
             </dataSource>
