@@ -7,8 +7,10 @@ import cn.fudan.lib.dto.Location;
 import cn.fudan.lib.stream.database.DaoMapper;
 import cn.fudan.lib.utils.LocationService;
 import cn.fudan.lib.utils.TencentMapLocationService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class UpdateAllDeviceLocationInfo {
@@ -19,14 +21,14 @@ public class UpdateAllDeviceLocationInfo {
         sqlSession.close();
         LocationService locationService = new TencentMapLocationService();
 
-        Long startId = 0L;
+        Long startId = Long.parseLong(args[0]);
         Location locationInfo = null;
         DeviceInfo info = null;
         int r = 0;
         int size = deviceInfoList.size();
         for (int i = 0; i < size; ) {
             info = deviceInfoList.get(i);
-            if (info.getId() <= startId) {
+            if (StringUtils.isNotBlank(info.getArea()) || info.getLat().compareTo(new BigDecimal(0)) == 0) {
                 i++;
                 continue;
             }

@@ -15,15 +15,22 @@ import java.math.BigDecimal;
  */
 public class TencentMapLocationService implements LocationService {
     private static final String SK      = "6lmWSIzGZ6wTBunds3ik60t0HDKZJLy";
+    //private static final String SK      = "SMAT0s4FQgoMSEmV8hsu19x55yID6Su1";
     private static final String KEY     = "SKBBZ-H3BCF-ZYNJ4-JKSDM-AW3P3-HEFG3";
+    //private static final String KEY     = "5TCBZ-IWOWF-RAAJA-JJEVD-HI3HS-YSBE7";
     private static final String API_FMT = "https://apis.map.qq.com/ws/geocoder/v1/?location=%s,%s&key=" + KEY + "&get_poi=1&sig=%s";
 
     @Override
     public Location getLocationInfo (BigDecimal lat, BigDecimal lng) {
         String api = getApi(lat, lng);
+        System.out.println(api);
         try {
             String jsonResult = JsoupUtil.genConnection(api, "").get().body().text();
             JSONObject jsonObject = JSONObject.parseObject(jsonResult);
+            if (jsonObject.getInteger("status") != 0) {
+                System.out.println(jsonObject.getString("message"));
+            }
+
             JSONObject result = jsonObject.getJSONObject("result");
             String address = result.getString("address");
             JSONObject addressComponent = result.getJSONObject("address_component");

@@ -26,6 +26,7 @@ public class ReadData extends TimerTask {
     private              SubscribeItem     dataType;
     private static final Object            lock            = new Object();
     private static final ExecutorService   executorService = Executors.newFixedThreadPool(30);
+    private              Timer             timer;
 
     //开始时间到现在时间的差值
     private long timeDiff = 0;
@@ -62,11 +63,17 @@ public class ReadData extends TimerTask {
         this.dataType = dataType;
         init();
         startRedData();
-
     }
 
     private void startRedData () {
-        new Timer().scheduleAtFixedRate(this, 0, period);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(this, 0, period);
+        this.timer = timer;
+    }
+
+    public void stop () {
+        if (this.timer != null)
+            this.timer.cancel();
     }
 
     private final Set<DataItem> DataPool = new HashSet<>();

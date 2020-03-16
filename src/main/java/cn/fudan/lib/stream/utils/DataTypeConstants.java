@@ -29,7 +29,7 @@ public class DataTypeConstants {
     public static final String tDeviceInfo               = "t_device_info";//	位置信息
     public static final String tExceptionData            = "t_exception_data";//	异常信息表
 
-    private static final Set<String> ALL_DATA_TYPES = new HashSet<String>() {
+    public static final Set<String> ALL_DATA_TYPES = new HashSet<String>() {
         {
             this.add(DataTypeConstants.BedMat);
             this.add(DataTypeConstants.ElevatorSensor);

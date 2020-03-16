@@ -70,6 +70,12 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>gnu.io</groupId>
+            <artifactId>rxtx</artifactId>
+            <version>2.1.7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -89,7 +95,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>cn.fudan.lib.app.xk.CalculateDevice20Km</mainClass>
+                            <mainClass>cn.fudan.lib.app.xk.UpdateAllDeviceLocationInfo</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

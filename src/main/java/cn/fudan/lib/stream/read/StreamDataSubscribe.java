@@ -8,8 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class StreamDataSubscribe {
-    private DataHandler        handler;
-    private Set<SubscribeItem> SubscribeDataTypes;
+    private              DataHandler        handler;
+    private              Set<SubscribeItem> SubscribeDataTypes;
+    private              Set<ReadData>      tasks;
+    private static final Object             lock = new Object();
 
     private StreamDataSubscribe () {
     }
@@ -18,6 +20,7 @@ public class StreamDataSubscribe {
         super();
         checkDataTypes(dataTypes);
         this.handler = handler;
+        this.tasks = new HashSet<>();
     }
 
     public void start () {
@@ -25,10 +28,21 @@ public class StreamDataSubscribe {
             new Thread(new Runnable() {
                 @Override
                 public void run () {
-                    new ReadData(dataType).read(handler);
+                    ReadData readData = new ReadData(dataType);
+                    readData.read(handler);
+                    synchronized (lock) {
+                        tasks.add(readData);
+                    }
                 }
             }).start();
+        }
+    }
 
+    public void stop () {
+        if (this.tasks != null && tasks.size() > 0) {
+            for (ReadData task : tasks) {
+                task.stop();
+            }
         }
     }
 

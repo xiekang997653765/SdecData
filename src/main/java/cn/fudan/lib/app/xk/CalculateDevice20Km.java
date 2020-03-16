@@ -26,6 +26,8 @@ public class CalculateDevice20Km {
         DeviceInfo info = null;
         int size = deviceInfoList.size();
         for (int i = 0; i < size; i++) {
+            if(i < 1176) continue;
+
             info = deviceInfoList.get(i);
             sqlSession = MySqlSessionFactory.createSqlSession().openSession();
             mapper = sqlSession.getMapper(DaoMapper.class);

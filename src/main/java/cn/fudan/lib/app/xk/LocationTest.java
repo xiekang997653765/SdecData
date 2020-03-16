@@ -12,6 +12,7 @@ public class LocationTest {
 
         Location locationInfo = locationService.getLocationInfo(new BigDecimal("31.232131"), new BigDecimal("121.454858"));
 
+
     }
 
 }

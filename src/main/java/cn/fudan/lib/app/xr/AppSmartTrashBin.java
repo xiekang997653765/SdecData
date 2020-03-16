@@ -1,17 +1,9 @@
 package cn.fudan.lib.app.xr;
 
-import cn.fudan.lib.dto.DataItem;
 import cn.fudan.lib.stream.core.DataHandler;
-import cn.fudan.lib.stream.database.QueryData;
-import cn.fudan.lib.stream.database.QueryParameter;
 import cn.fudan.lib.stream.pojo.SubscribeItem;
 import cn.fudan.lib.stream.read.StreamDataSubscribe;
 import cn.fudan.lib.stream.utils.DataTypeConstants;
-import com.alibaba.fastjson.JSON;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.util.List;
 
 public class AppSmartTrashBin {
     public static void main (String[] args) {
